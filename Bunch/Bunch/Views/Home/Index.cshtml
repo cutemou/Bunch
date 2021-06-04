@@ -1,0 +1,36 @@
+﻿@using Bunch.Models;
+@{ 
+    List<User> users = ViewBag.users;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>編號</th>
+            <th>名稱</th>
+            <th>電子郵件</th>
+            <th>密碼</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (User user in users)
+        {
+            <tr>
+                <th>@user.id</th>
+                <th>@user.name</th>
+                <th>@user.email</th>
+                <th>@user.password</th>
+                <th>@Html.ActionLink("編輯", "EditUser",new { id = user.id})
+                |
+                    @Html.ActionLink("刪除", "DeleteUser",new { id = user.id})
+                </th>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    @Html.ActionLink("新增資料","CreateUser")
+</p>
