@@ -1,0 +1,11 @@
+﻿body {
+
+}
+.login-img img {
+    width: 40%;
+}
+@media (max-width:720px) {
+    .login-img img {
+        width: 100%;
+    }
+}

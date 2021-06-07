@@ -20,11 +20,18 @@ namespace Bunch
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.js",
+                      "~/Scripts/Test.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/index.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap5js", "https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js").Include("~/Scripts/bootstrap.js"));
+            bundles.Add(new StyleBundle("~/Content/bootstrap5css", "https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css").Include("~/Content/bootstrap.css"));
+            BundleTable.EnableOptimizations = true;
+            bundles.UseCdn = true;
         }
     }
 }

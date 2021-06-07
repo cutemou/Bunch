@@ -1,36 +1,127 @@
 ﻿@using Bunch.Models;
 @{ 
-    List<User> users = ViewBag.users;
+    List<Test> tests = ViewBag.tests;
 }
+<body onload="ShowTime()">
+    <div class="container">
+        <div class="header text-center h1">線上打卡系統</div>
+        <div class="content">
+            <div class="login-img d-flex justify-content-center">
+                <img src="https://www.wisdom.com.tw/uploadfiles/829/images/8.jpg" alt="" class="">
+            </div>
+            <form class="form text-center" runat="server">
+                <div class="name h1 my-5">您好，Alex</div>
+                <div id="showTime" class="h1 my-5"></div>
+                <div class="my-5">
+                    <button type="button" class="btn btn-lg btn-primary rounded-circle p-4 " data-toggle="modal" data-target="#myModal1" data-whatever="打卡上班">
+                        打卡上班
+                    </button>
+                    <button type="button" class="btn btn-lg btn-success rounded-circle p-4 " data-toggle="modal" data-target="#myModal1" data-whatever="中途打卡">
+                        中途打卡
+                    </button>
+                    <button type="button" class="btn btn-lg btn-danger rounded-circle p-4 " data-toggle="modal" data-target="#myModal1" data-whatever="打卡下班">
+                        打卡下班
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped h2 table-scroll">
+                        <thead>
+                            <tr>
+                                <th class="width-fix">狀態</th>
+                                <th class="width-fix">體溫</th>
+                                <th>時間</th>
+                                <th class="width-fix">備註</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Test test in tests)
+                            {
+                <tr>
+                    <th>@test.id</th>
+                    <th>@test.state</th>
+                    <th>@test.temperature</th>
+                    <th>@test.time</th>
+                    <th>
+                        @Html.ActionLink("編輯", "EditUser", new { id = test.id })
+                        |
+                        @Html.ActionLink("刪除", "DeleteUser", new { id = test.id })
+                    </th>
+                </tr>}
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+    <p>
+        @Html.ActionLink("新增資料", "CreateUser")
+    </p>
+    <!-- Modal1 -->
+    <div class="modal" tabindex="-1" id="myModal1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h2 class="modal-title text-white">打卡上班</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="/Home/CreateUser">
+                        <div class="form-group row">
+                            <label for="inputState" class="col-sm-3 h2">狀態</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="inputState" name="state" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputemail" class="col-sm-3 h2">溫度</label>
+                            <div class="col-sm-9">
+                                <input type="number" step=".01" id="inputemail" onchange="(function(el){el.value=parseFloat(el.value).toFixed(1);})(this)" name="temperature" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputTime" class="col-sm-3 h2">時間</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="inputTime" name="time" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-lg h3" data-dismiss="modal">取消</button>
+                            <input class="btn btn-primary btn-lg h3" id="btn-submit" type="submit" value="" />
+                        </div>
+                    </form>
+                </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>編號</th>
-            <th>名稱</th>
-            <th>電子郵件</th>
-            <th>密碼</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    <script type="text/javascript">
+        function ShowTime() {
+            var NowDate = new Date();
+            var d = NowDate.getDay();
+            var dayNames = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
+            document.getElementById('showTime').innerHTML = '目前時間：' + NowDate.toLocaleString() + '（' + dayNames[d] + '）';
+            setTimeout('ShowTime()', 1000);
+        };
+        function getTime() {
+            var getDate = new Date();
+            return getDate.toLocaleString();
+        };
+        $(document).ready(function () {
+            $('#myModal1').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var recipient = button.data('whatever'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                var day = getTime();
+                console.log(day);
+                modal.find('.modal-title').text(recipient);
+                modal.find('.modal-body #inputState').val(recipient);
+                modal.find('.modal-body #btn-submit').val(recipient);
+                modal.find('.modal-body #inputTime').val(day);
+            })
+        });
+    </script>
+</body>
 
-        @foreach (User user in users)
-        {
-            <tr>
-                <th>@user.id</th>
-                <th>@user.name</th>
-                <th>@user.email</th>
-                <th>@user.password</th>
-                <th>@Html.ActionLink("編輯", "EditUser",new { id = user.id})
-                |
-                    @Html.ActionLink("刪除", "DeleteUser",new { id = user.id})
-                </th>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<p>
-    @Html.ActionLink("新增資料","CreateUser")
-</p>

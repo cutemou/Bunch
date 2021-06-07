@@ -12,8 +12,8 @@ namespace Bunch.Controllers
         public ActionResult Index()
         {
             DBmanager dbmanager = new DBmanager();
-            List<User> users = dbmanager.GetUsers();
-            ViewBag.users = users;
+            List<Test> tests = dbmanager.GetUsers();
+            ViewBag.tests = tests;
             return View();
         }
 
@@ -23,32 +23,27 @@ namespace Bunch.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateUser(User user)
+        public ActionResult CreateUser(Test test)
         {
             DBmanager dbmanager = new DBmanager();
-            try
-            {
-                dbmanager.NewUser(user);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+
+                dbmanager.NewUser(test);
+
             return RedirectToAction("Index");
         }
 
         public ActionResult EditUser(int id)
         {
             DBmanager dbmanager = new DBmanager();
-            User user = dbmanager.GetUserById(id);
-            return View(user);
+            Test test = dbmanager.GetUserById(id);
+            return View(test);
         }
 
         [HttpPost]
-        public ActionResult EditUser(User user)
+        public ActionResult EditUser(Test test)
         {
             DBmanager dbmanager = new DBmanager();
-            dbmanager.UpdateUser(user);
+            dbmanager.UpdateUser(test);
             return RedirectToAction("Index");
         }
 
@@ -58,5 +53,7 @@ namespace Bunch.Controllers
             dbmanager.DeleteUserById(id);
             return RedirectToAction("Index");
         }
+
+
     }
 }

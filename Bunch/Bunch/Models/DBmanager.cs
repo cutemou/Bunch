@@ -10,11 +10,11 @@ namespace Bunch.Models
     {
         private readonly string ConnStr = "Data Source=DESKTOP-4KFR4H7\\SQLEXPRESS;Initial Catalog=Test;Integrated Security=True;User Instance=False";
 
-        public List<User> GetUsers()
+        public List<Test> GetUsers()
         {
-            List<User> users = new List<User>();
+            List<Test> tests = new List<Test>();
             SqlConnection sqlConnection = new SqlConnection(ConnStr);
-            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Users");
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Test");
             sqlCommand.Connection = sqlConnection;
             sqlConnection.Open();
 
@@ -23,14 +23,14 @@ namespace Bunch.Models
             {
                 while (reader.Read())
                 {
-                    User user = new User
+                    Test test = new Test
                     {
                         id = reader.GetInt32(reader.GetOrdinal("id")),
-                        name = reader.GetString(reader.GetOrdinal("name")),
-                        email = reader.GetString(reader.GetOrdinal("email")),
-                        password = reader.GetString(reader.GetOrdinal("password")),
+                        state = reader.GetString(reader.GetOrdinal("state")),
+                        temperature = reader.GetDecimal(reader.GetOrdinal("temperature")),
+                        time = reader.GetString(reader.GetOrdinal("time")),
                     };
-                    users.Add(user);
+                    tests.Add(test);
                 }
             }
             else
@@ -38,29 +38,29 @@ namespace Bunch.Models
                 Console.WriteLine("資料庫為空！");
             }
             sqlConnection.Close();
-            return users;
+            return tests;
         }
 
-        public void NewUser(User user)
+        public void NewUser(Test test)
         {
             SqlConnection sqlConnection = new SqlConnection(ConnStr);
             SqlCommand sqlCommand = new SqlCommand(
-                @"INSERT INTO Users(name,email,password)
-                VALUES (@name,@email,@password)");
+                @"INSERT INTO Test(state,temperature,time)
+                VALUES (@state,@temperature,@time)");
             sqlCommand.Connection = sqlConnection;
-            sqlCommand.Parameters.Add(new SqlParameter("@name", user.name));
-            sqlCommand.Parameters.Add(new SqlParameter("@email", user.email));
-            sqlCommand.Parameters.Add(new SqlParameter("@password", user.password));
-            sqlConnection.Open();
+            sqlCommand.Parameters.Add(new SqlParameter("@state", test.state));
+            sqlCommand.Parameters.Add(new SqlParameter("@temperature", test.temperature));
+            sqlCommand.Parameters.Add(new SqlParameter("@time", test.time));
+            sqlConnection.Open();   
             sqlCommand.ExecuteNonQuery();
             sqlConnection.Close();
         }
 
-        public User GetUserById(int id)
+        public Test GetUserById(int id)
         {
-            User user = new User();
+            Test test = new Test();
             SqlConnection sqlConnection = new SqlConnection(ConnStr);
-            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Users WHERE id = @id");
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Test WHERE id = @id");
             sqlCommand.Connection = sqlConnection;
             sqlCommand.Parameters.Add(new SqlParameter("@id", id));
             sqlConnection.Open();
@@ -70,12 +70,12 @@ namespace Bunch.Models
             {
                 while (reader.Read())
                 {
-                    user = new User
+                    test = new Test
                     {
                         id = reader.GetInt32(reader.GetOrdinal("id")),
-                        name = reader.GetString(reader.GetOrdinal("name")),
-                        email = reader.GetString(reader.GetOrdinal("email")),
-                        password = reader.GetString(reader.GetOrdinal("password")),
+                        state = reader.GetString(reader.GetOrdinal("state")),
+                        temperature = reader.GetDecimal(reader.GetOrdinal("temperature")),
+                        time = reader.GetString(reader.GetOrdinal("time")),
                     };
                 }
             }
@@ -84,19 +84,19 @@ namespace Bunch.Models
                 Console.WriteLine("未找到該筆資料！");
             }
             sqlConnection.Close();
-            return user;
+            return test;
         }
 
-        public void UpdateUser(User user)
+        public void UpdateUser(Test test)
         {
             SqlConnection sqlConnection = new SqlConnection(ConnStr);
             SqlCommand sqlCommand = new SqlCommand(
-                @"UPDATE Users SET name = @name, email = @email, password = @password WHERE id = @id");
+                @"UPDATE Test SET state = @state, temperature = @temperature, time = @time WHERE id = @id");
             sqlCommand.Connection = sqlConnection;
-            sqlCommand.Parameters.Add(new SqlParameter("@name", user.name));
-            sqlCommand.Parameters.Add(new SqlParameter("@email", user.email));
-            sqlCommand.Parameters.Add(new SqlParameter("@password", user.password));
-            sqlCommand.Parameters.Add(new SqlParameter("@id", user.id));
+            sqlCommand.Parameters.Add(new SqlParameter("@state", test.state));
+            sqlCommand.Parameters.Add(new SqlParameter("@temperature", test.temperature));
+            sqlCommand.Parameters.Add(new SqlParameter("@time", test.time));
+            sqlCommand.Parameters.Add(new SqlParameter("@id", test.id));
             sqlConnection.Open();
             sqlCommand.ExecuteNonQuery();
             sqlConnection.Close();
@@ -105,12 +105,12 @@ namespace Bunch.Models
         {
             SqlConnection sqlConnection = new SqlConnection(ConnStr);
             SqlCommand sqlCommand = new SqlCommand(
-                @"DELETE FROM Users WHERE id = @id");
+                @"DELETE FROM Test WHERE id = @id");
             sqlCommand.Connection = sqlConnection;
             sqlCommand.Parameters.Add(new SqlParameter("@id", id));
             sqlConnection.Open();
             sqlCommand.ExecuteNonQuery();
             sqlConnection.Close();
         }
-    }
+     }
 }
